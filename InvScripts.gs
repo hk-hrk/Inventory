@@ -3,8 +3,8 @@
 // June 28, 2022
 // Run in Google Apps Script
 
-// Last update July 25, 2022
-// adjusted clean() to remove excessive processing
+// Last update: August 11, 2022
+// adjusted clean() to account for errors when deleting rows
 
 // Adds menu functions for processing
 function onOpen() {
@@ -34,11 +34,13 @@ function clean() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var rawData = ss.getSheetByName("RawData");
   var listLen = rawData.getLastRow();
-  for (line = listLen; line >= 23+35; line = line - 1) {
+  for (line = listLen; line >= 57; line = line - 1) {
     var value = rawData.getRange(line,1).getValue();
     if (value == '') {
-      Logger.log(line+" Delete");
       rawData.deleteRows(line-2,3);
+      if (listLen >= line-2) {
+        line = line-3;
+      }
     }
   }
 }
